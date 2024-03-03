@@ -23,6 +23,24 @@ public class Main {
                 System.out.println("Współrzędne dla lokalizacji:");
                 System.out.println("Szerokość geograficzna (latitude): " + locationData.getLatitude());
                 System.out.println("Długość geograficzna (longitude): " + locationData.getLongitude());
+
+                // Pobierz dane pogodowe na podstawie lokalizacji
+                WeatherService weatherService = new WeatherService();
+                WeatherService.WeatherData weatherData = weatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
+
+                if (weatherData != null) {
+                    // Konwersja temperatury z kelwinów na stopnie Celsjusza
+                    double temperatureCelsius = weatherData.getTemperature() - 273.15;
+
+                    System.out.println("Dane pogodowe:");
+                    System.out.println("Temperatura: " + temperatureCelsius + " stopni Celsjusza");
+                    System.out.println("Ciśnienie: " + weatherData.getPressure() + " hPa");
+                    System.out.println("Wilgotność: " + weatherData.getHumidity() + "%");
+                    System.out.println("Prędkość wiatru: " + weatherData.getWindSpeed() + " m/s");
+                    System.out.println("Kierunek wiatru: " + weatherData.getWindDirection() + " stopni");
+                } else {
+                    System.out.println("Nie udało się pobrać danych pogodowych.");
+                }
             } else {
                 System.out.println("Nie udało się uzyskać współrzędnych dla podanej lokalizacji.");
             }
