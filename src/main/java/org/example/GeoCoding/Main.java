@@ -1,5 +1,7 @@
 package org.example.GeoCoding;
 
+import org.example.WeatherData.WeatherData;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +27,8 @@ public class Main {
                 System.out.println("Długość geograficzna (longitude): " + locationData.getLongitude());
 
                 // Pobierz dane pogodowe na podstawie lokalizacji
-                WeatherService weatherService = new WeatherService();
-                WeatherService.WeatherData weatherData = weatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
+                OpenWeatherService weatherService = new OpenWeatherService();
+                WeatherData weatherData = weatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
 
                 if (weatherData != null) {
                     // Konwersja temperatury z kelwinów na stopnie Celsjusza
