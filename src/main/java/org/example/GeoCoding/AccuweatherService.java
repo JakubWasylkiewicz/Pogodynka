@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 public class AccuweatherService {
     private static final String ACCUWEATHER_API_KEY = "EjIs6w02WNNFJeJ4P72Bv4TkEVepCFcD";
-    private static String getCityKey(double latitude, double longitude) throws IOException {
+    public static String getCityKey(double latitude, double longitude) throws IOException {
         String urlString = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?q=" + latitude + "," + longitude + "&apikey=" + ACCUWEATHER_API_KEY;
 
         URL url = new URL(urlString);
@@ -39,7 +39,7 @@ public class AccuweatherService {
         return null;
     }
 
-    private static String getWeatherData(String cityKey) throws IOException {
+    public static String getWeatherData(String cityKey) throws IOException {
         String urlString = "http://dataservice.accuweather.com/currentconditions/v1/" + cityKey + "?apikey=" + ACCUWEATHER_API_KEY;
 
         URL url = new URL(urlString);
