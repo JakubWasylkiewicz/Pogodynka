@@ -1,11 +1,10 @@
 package org.example.GeoCoding;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class AggregateMain {
+public class  AggregateMain {
 
     public static void main(String[] args) {
         try {
@@ -26,15 +25,15 @@ public class AggregateMain {
                 System.out.println("Długość geograficzna (longitude): " + locationData.getLongitude());
 
                 AggregateService aggregateService = new AggregateService();
-                WeatherService.WeatherData aggregatedWeatherData = aggregateService.aggregateWeatherData(locationData.getLatitude(), locationData.getLongitude());
+                AggregateService.AggregatedWeatherData aggregatedWeatherData = aggregateService.getAggregatedWeatherData(locationData.getLatitude(), locationData.getLongitude());
 
                 if (aggregatedWeatherData != null) {
                     System.out.println("Agregowane dane pogodowe:");
-                    System.out.println("Temperatura: " + aggregatedWeatherData.getTemperature() + " stopni Celsjusza");
-                    System.out.println("Ciśnienie: " + aggregatedWeatherData.getPressure() + " hPa");
-                    System.out.println("Wilgotność: " + aggregatedWeatherData.getHumidity() + "%");
-                    System.out.println("Prędkość wiatru: " + aggregatedWeatherData.getWindSpeed() + " m/s");
-                    System.out.println("Kierunek wiatru: " + aggregatedWeatherData.getWindDirection() + " stopni");
+                    System.out.println("Temperatura: " + aggregatedWeatherData.getAverageTemperature() + " stopni Celsjusza");
+                    System.out.println("Ciśnienie: " + aggregatedWeatherData.getAveragePressure() + " hPa");
+                    System.out.println("Wilgotność: " + aggregatedWeatherData.getAverageHumidity() + "%");
+                    System.out.println("Prędkość wiatru: " + aggregatedWeatherData.getAverageWindSpeed() + " m/s");
+                    System.out.println("Kierunek wiatru: " + aggregatedWeatherData.getAverageWindDirection() + " stopni");
                 } else {
                     System.out.println("Nie udało się uzyskać danych pogodowych.");
                 }
@@ -46,4 +45,3 @@ public class AggregateMain {
         }
     }
 }
-
