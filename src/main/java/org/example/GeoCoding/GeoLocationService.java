@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class GeoLocationService {
-
     private static final String API_KEY = "api_key=65e2f07a7c763292633381fac5b8a44";
 
     public static class LocationData {

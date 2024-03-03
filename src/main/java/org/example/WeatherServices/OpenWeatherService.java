@@ -1,4 +1,4 @@
-package org.example.GeoCoding;
+package org.example.WeatherServices;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;

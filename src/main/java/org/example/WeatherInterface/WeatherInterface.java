@@ -1,6 +1,5 @@
 package org.example.WeatherInterface;
 
-import org.example.GeoCoding.OpenWeatherService;
 import org.example.WeatherData.WeatherData;
 
 import java.io.IOException;
