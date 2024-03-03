@@ -1,5 +1,6 @@
 package org.example.GeoCoding;
 
+import org.example.Aggregation.AggregateService;
 import org.example.WeatherData.WeatherData;
 
 import java.io.BufferedReader;
@@ -27,22 +28,45 @@ public class Main {
                 System.out.println("Długość geograficzna (longitude): " + locationData.getLongitude());
 
                 // Pobierz dane pogodowe na podstawie lokalizacji
-                OpenWeatherService weatherService = new OpenWeatherService();
-                WeatherData weatherData = weatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
+                OpenWeatherService openWeatherService = new OpenWeatherService();
+                WeatherData openWeatherData = openWeatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
 
-                if (weatherData != null) {
+                AccuweatherService accuWeatherService = new AccuweatherService();
+                WeatherData accuWeatherData = accuWeatherService.getWeatherData(locationData.getLatitude(), locationData.getLongitude());
+
+                AggregateService aggregateService = new AggregateService(accuWeatherService, openWeatherService);
+
+                WeatherData aggregatedWeather = aggregateService.getAggregatedWeather(locationData.getLatitude(), locationData.getLongitude());
+
+                if (openWeatherData != null) {
                     // Konwersja temperatury z kelwinów na stopnie Celsjusza
-                    double temperatureCelsius = weatherData.getTemperature() - 273.15;
-
-                    System.out.println("Dane pogodowe:");
+                    double temperatureCelsius = openWeatherData.getTemperature() - 273.15;
+                    System.out.println("Dane pogodowe Open Weather:");
                     System.out.println("Temperatura: " + temperatureCelsius + " stopni Celsjusza");
-                    System.out.println("Ciśnienie: " + weatherData.getPressure() + " hPa");
-                    System.out.println("Wilgotność: " + weatherData.getHumidity() + "%");
-                    System.out.println("Prędkość wiatru: " + weatherData.getWindSpeed() + " m/s");
-                    System.out.println("Kierunek wiatru: " + weatherData.getWindDirection() + " stopni");
+                    System.out.println("Ciśnienie: " + openWeatherData.getPressure() + " hPa");
+                    System.out.println("Wilgotność: " + openWeatherData.getHumidity() + "%");
+                    System.out.println("Prędkość wiatru: " + openWeatherData.getWindSpeed() + " m/s");
+                    System.out.println("Kierunek wiatru: " + openWeatherData.getWindDirection() + " stopni");
                 } else {
                     System.out.println("Nie udało się pobrać danych pogodowych.");
                 }
+                if (accuWeatherData != null) {
+                    System.out.println("Dane pogodowe Accu Weather:");
+                    System.out.println("Temperatura: " + accuWeatherData.getTemperature() + " stopni Celsjusza");
+                    System.out.println("Ciśnienie: " + accuWeatherData.getPressure() + " hPa");
+                    System.out.println("Wilgotność: " + accuWeatherData.getHumidity() + "%");
+                    System.out.println("Prędkość wiatru: " + accuWeatherData.getWindSpeed() + " m/s");
+                    System.out.println("Kierunek wiatru: " + accuWeatherData.getWindDirection() + " stopni");
+                } else {
+                    System.out.println("Nie udało się pobrać danych pogodowych.");
+                }
+                System.out.println("Średnie wartosci 2 serwisów");
+                System.out.println("Temperatura: " + aggregatedWeather.getTemperature());
+                System.out.println("Ciśnienie: " + aggregatedWeather.getPressure());
+                System.out.println("Wilgotność: " + aggregatedWeather.getHumidity());
+                System.out.println("Prędkość wiatru: " + aggregatedWeather.getWindSpeed());
+                System.out.println("Kierunek wiatru: " + aggregatedWeather.getWindDirection());
+                System.out.println("------------");
             } else {
                 System.out.println("Nie udało się uzyskać współrzędnych dla podanej lokalizacji.");
             }

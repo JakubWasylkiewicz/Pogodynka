@@ -1,8 +1,6 @@
 package org.example.GeoCoding;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
+import com.google.gson.*;
 import org.example.WeatherData.WeatherData;
 import org.example.WeatherInterface.WeatherInterface;
 
@@ -11,8 +9,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 public class AccuweatherService implements WeatherInterface {
-    private static final String ACCUWEATHER_API_KEY = "EjIs6w02WNNFJeJ4P72Bv4TkEVepCFcD";
+    private static final String ACCUWEATHER_API_KEY = "SbOjnr34wwAfOV5b2AUPovGKGF3JP9Os";
+
     public static String getCityKey(double latitude, double longitude) throws IOException {
         String urlString = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?q=" + latitude + "," + longitude + "&apikey=" + ACCUWEATHER_API_KEY;
 
@@ -43,8 +43,8 @@ public class AccuweatherService implements WeatherInterface {
 
     @Override
     public WeatherData getWeatherData(double latitude, double longitude) throws IOException {
-        String cityKey = getCityKey(latitude,longitude);
-        String urlString = "http://dataservice.accuweather.com/currentconditions/v1/" + cityKey + "?apikey=" + ACCUWEATHER_API_KEY;
+        String cityKey = getCityKey(latitude, longitude);
+        String urlString = "http://dataservice.accuweather.com/currentconditions/v1/" + cityKey + "?apikey=" + ACCUWEATHER_API_KEY + "&details=true";
 
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -63,12 +63,25 @@ public class AccuweatherService implements WeatherInterface {
             JsonParser parser = new JsonParser();
             JsonElement jsonResponse = parser.parse(response.toString());
 
-//   dokończyć implementacje
-//            return new WeatherData(temperature, pressure, humidity, windSpeed, windDirection);
+            if (jsonResponse.isJsonArray()) {
+                JsonArray weatherArray = jsonResponse.getAsJsonArray();
+                if (weatherArray.size() > 0) {
+                    JsonObject weatherObject = weatherArray.get(0).getAsJsonObject();
+                    System.out.println(weatherObject.toString());
+                    double temperature = weatherObject.getAsJsonObject("Temperature").getAsJsonObject("Metric").get("Value").getAsDouble();
+//                    double pressure = weatherObject.get("Pressure").getAsJsonObject("Metric").get("Value").getAsDouble();
+                    double pressure = 0;
+                    double pressure2 = weatherObject.getAsJsonObject("Pressure").getAsJsonObject("Metric").get("Value").getAsDouble();
+                    double humidity = weatherObject.get("RelativeHumidity").getAsDouble();
+                    double windSpeed = weatherObject.getAsJsonObject("Wind").getAsJsonObject("Speed").getAsJsonObject("Metric").get("Value").getAsDouble();
+                    double windDirection = weatherObject.getAsJsonObject("Wind").getAsJsonObject("Direction").get("Degrees").getAsDouble();
+
+                    return new WeatherData(temperature, pressure2, humidity, windSpeed, windDirection);
+                }
+            }
         }
         return null;
     }
-
 
 
 }
